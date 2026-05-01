@@ -23,9 +23,9 @@
             <geometry>
                 <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
             </geometry>
-            <xacro:cylinder_inertia m="1.0" r="${wheel_radius}" h="${wheel_length}"
-                                    o_xyz="0 0 0" o_rpy="${pi / 2.0} 0 0" />
         </collision>
+        <xacro:cylinder_inertia m="1.0" r="${wheel_radius}" h="${wheel_length}"
+                                    o_xyz="0 0 0" o_rpy="${pi / 2.0} 0 0" />
         </link>
     </xacro:macro>
 
@@ -53,8 +53,26 @@
     <xacro:wheel_link prefix="leftFront" />
 
     <!-- dummy link for fonrt wheel to steer -->
-    <link name="rightFront_steer_link"/>
-    <link name="leftFront_steer_link"/>
+    <link name="rightFront_steer_link">
+        <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.05"/>
+        <inertia
+            ixx="0.00001" ixy="0.0" ixz="0.0"
+            iyy="0.00001" iyz="0.0"
+            izz="0.00001"/>
+        </inertial>
+    </link>
+    <link name="leftFront_steer_link">
+        <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.05"/>
+        <inertia
+            ixx="0.00001" ixy="0.0" ixz="0.0"
+            iyy="0.00001" iyz="0.0"
+            izz="0.00001"/>
+        </inertial>
+    </link>
     <link name="base_footprint" />
 
     <joint name="base_rightBack_wheel_joint" type="continuous">
