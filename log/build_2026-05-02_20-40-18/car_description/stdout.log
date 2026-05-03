@@ -1,0 +1,27 @@
+-- Install configuration: ""
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/urdf
+-- Installing: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/urdf/car.urdf.xacro
+-- Installing: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/urdf/sensor.xacro
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/urdf/properties.xacro
+-- Installing: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/urdf/ros2_control.xacro
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/launch
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/launch/gazebo.launch.py
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/launch/display.launch.py
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/rviz
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/config
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/config/ros2_control.yaml
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/ament_index/resource_index/package_run_dependencies/car_description
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/ament_index/resource_index/parent_prefix_path/car_description
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/environment/ament_prefix_path.sh
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/environment/path.sh
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/environment/path.dsv
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/local_setup.bash
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/local_setup.sh
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/local_setup.zsh
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/local_setup.dsv
+-- Installing: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/package.dsv
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/ament_index/resource_index/packages/car_description
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/cmake/car_descriptionConfig.cmake
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/cmake/car_descriptionConfig-version.cmake
+-- Up-to-date: /home/rick/Desktop/ros2_project/slamNmap/install/car_description/share/car_description/package.xml
