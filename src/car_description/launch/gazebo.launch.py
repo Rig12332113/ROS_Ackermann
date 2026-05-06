@@ -1,11 +1,12 @@
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, TimerAction
-from launch.substitutions import Command, PathJoinSubstitution
+from launch.substitutions import Command, PathJoinSubstitution, EnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.parameter_descriptions import ParameterValue
 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from launch.actions import SetEnvironmentVariable
 
 
 def generate_launch_description():
@@ -24,11 +25,41 @@ def generate_launch_description():
             value_type=str
         )
     }
-    world_path = PathJoinSubstitution([
-        FindPackageShare("car_description"),
-        "world",
-        "test.sdf"
+
+    aws_world_dir = PathJoinSubstitution([
+        EnvironmentVariable("HOME"),
+        "Desktop",
+        "ros2_project",
+        "slamNmap",
+        "src",
+        "aws-robomaker-small-warehouse-world",
     ])
+
+    world = PathJoinSubstitution([
+        aws_world_dir,
+        "worlds",
+        "no_roof_small_warehouse",
+        "no_roof_small_warehouse.world",
+    ])
+
+    set_gz_resource_path = SetEnvironmentVariable(
+    name="GZ_SIM_RESOURCE_PATH",
+    value=[
+        EnvironmentVariable("GZ_SIM_RESOURCE_PATH", default_value=""),
+        ":",
+        aws_world_dir,
+        ":",
+        PathJoinSubstitution([
+            aws_world_dir,
+            "models",
+        ]),
+    ],
+)
+    # world_path = PathJoinSubstitution([
+    #     FindPackageShare("car_description"),
+    #     "world",
+    #     "test.sdf"
+    # ])
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
@@ -38,7 +69,7 @@ def generate_launch_description():
             ])
         ]),
         launch_arguments={
-            "gz_args": ["-r ", world_path]
+            "gz_args": ["-r -v 4 ", world]
         }.items()
     )
 
@@ -57,7 +88,7 @@ def generate_launch_description():
             "-name", "ackermann_car",
             "-x", "0",
             "-y", "0",
-            "-z", "0.15"
+            "-z", "0"
         ],
         output="screen"
     )
@@ -109,6 +140,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        set_gz_resource_path,
         gazebo,
         robot_state_publisher,
         spawn_robot,
