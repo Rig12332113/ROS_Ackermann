@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
 <robot name="car" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:include filename="$(find car_description)/urdf/properties.xacro"/>
-    <xacro:include filename="$(find car_description)/urdf/ros2_control.xacro"/>
-
     <xacro:property name="base_length" value="0.6" />
     <xacro:property name="base_width" value="0.4" />
     <xacro:property name="base_height" value="0.2" />
     <xacro:property name="wheel_radius" value="0.1" />
     <xacro:property name="wheel_length" value="0.05" />
+
+    <xacro:include filename="$(find car_description)/urdf/properties.xacro"/>
+    <xacro:include filename="$(find car_description)/urdf/ros2_control.xacro"/>
+    <xacro:include filename="$(find car_description)/urdf/sensor.xacro"/>
 
     <xacro:macro name="wheel_link" params="prefix">
         <link name="${prefix}_wheel_link">

@@ -24,7 +24,11 @@ def generate_launch_description():
             value_type=str
         )
     }
-
+    world_path = PathJoinSubstitution([
+        FindPackageShare("car_description"),
+        "world",
+        "test.sdf"
+    ])
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
@@ -34,7 +38,7 @@ def generate_launch_description():
             ])
         ]),
         launch_arguments={
-            "gz_args": "-r empty.sdf"
+            "gz_args": ["-r ", world_path]
         }.items()
     )
 
@@ -91,6 +95,19 @@ def generate_launch_description():
         output="screen",
     )
 
+    bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        parameters=[{
+            "config_file": PathJoinSubstitution([
+                FindPackageShare("car_description"),
+                "config",
+                "gazebo_bridge.yaml",
+            ])
+        }],
+        output="screen",
+    )
+
     return LaunchDescription([
         gazebo,
         robot_state_publisher,
@@ -109,4 +126,5 @@ def generate_launch_description():
                 front_steering_position_controller_spawner,
             ],
         ),
+        bridge
     ])

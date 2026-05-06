@@ -12,7 +12,7 @@ find_package(rclcpp REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 install(
-  DIRECTORY urdf launch rviz config
+  DIRECTORY urdf launch config world
   DESTINATION share/${PROJECT_NAME}
 )
 
