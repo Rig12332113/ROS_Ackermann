@@ -33,12 +33,6 @@ public:
         while (rclcpp::ok()) {
             char key = getKey();
 
-            if (direction_ > 0){
-                direction_ -= direction_step_;
-            }else if (direction_ < 0){
-                direction_ += direction_step_;
-            }
-
             if (key == 'q') {
                 velocity_ = 0.0;
                 direction_ = 0.0;
