@@ -48,4 +48,16 @@
             <parameters>$(find car_description)/config/ros2_control.yaml</parameters>
         </plugin>
     </gazebo>
+    <gazebo>
+        <plugin
+            filename="gz-sim-odometry-publisher-system"
+            name="gz::sim::systems::OdometryPublisher">
+
+            <odom_frame>world</odom_frame>
+            <robot_base_frame>base_link</robot_base_frame>
+            <odom_topic>/ground_truth/odom</odom_topic>
+            <dimensions>2</dimensions>
+
+        </plugin>
+    </gazebo>
 </robot>

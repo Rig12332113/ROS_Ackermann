@@ -1,7 +1,8 @@
-# colcon build artifacts
+# colcon build artifacts and bag records
 /build/
 /install/
 /log/
+/bags/
 
 # Python cache
 __pycache__/
