@@ -61,7 +61,17 @@ class RGBD_Node(Node):
         self.prev_depth = None
         self.prev_rgb = None
 
-        self.T_world_camera = np.eye(4)
+        self.T_base_camera = np.array([
+            [0.0,  0.0,  1.0, 0.310],
+            [-1.0, 0.0,  0.0, 0.000],
+            [0.0, -1.0,  0.0, 0.250],
+            [0.0,  0.0,  0.0, 1.000],
+        ], dtype=np.float64)
+
+        self.T_camera_base = np.linalg.inv(self.T_base_camera)
+
+        # Since GT starts near world == base_link, initialize camera pose from base pose.
+        self.T_world_camera = self.T_base_camera.copy()
 
 
     def rgbdCallBack(self, rgb_msg, depth_msg):
@@ -159,8 +169,8 @@ class RGBD_Node(Node):
             T_curr_prev = np.linalg.inv(T_prev_curr)
 
             self.T_world_camera = self.T_world_camera @ T_curr_prev
-
-            position = self.T_world_camera[:3, 3]
+            T_world_base = self.T_world_camera @ self.T_camera_base
+            position = T_world_base[:3, 3]
 
             # Initialize the message and publish
             pose_msg = PoseStamped()
@@ -186,7 +196,7 @@ class RGBD_Node(Node):
 
             odom_msg.header.stamp = self.get_clock().now().to_msg()
             odom_msg.header.frame_id = "map"
-            odom_msg.child_frame_id = "camera_link_optical"
+            odom_msg.child_frame_id = "base_link"
 
             odom_msg.pose.pose.position.x = float(position[0])
             odom_msg.pose.pose.position.y = float(position[1])

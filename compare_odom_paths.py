@@ -82,7 +82,8 @@ class OdomPathCompare(Node):
 
         pose.pose.position.x = x - origin[0]
         pose.pose.position.y = y - origin[1]
-        pose.pose.position.z = z - origin[2]
+        # pose.pose.position.z = z - origin[2]
+        pose.pose.position.z = 0.0
 
         pose.pose.orientation = msg.pose.pose.orientation
 
