@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 from nav_msgs.msg import Path, Odometry
 from geometry_msgs.msg import PoseStamped
+import tf_transformations
 
 class RGBD_Node(Node):
     def __init__(self):
@@ -162,15 +163,18 @@ class RGBD_Node(Node):
             ) 
             R, _ = cv2.Rodrigues(rvec)
 
-            T_prev_curr = np.eye(4)
-            T_prev_curr[:3, :3] = R
-            T_prev_curr[:3, 3] = t.ravel()
+            T_curr_prev = np.eye(4)
+            T_curr_prev[:3, :3] = R
+            T_curr_prev[:3, 3] = t.ravel()
 
-            T_curr_prev = np.linalg.inv(T_prev_curr)
+            T_prev_curr = np.linalg.inv(T_curr_prev)
 
-            self.T_world_camera = self.T_world_camera @ T_curr_prev
+            # Update accumulated camera pose in world
+            self.T_world_camera = self.T_world_camera @ T_prev_curr
+
             T_world_base = self.T_world_camera @ self.T_camera_base
             position = T_world_base[:3, 3]
+            quat = tf_transformations.quaternion_from_matrix(T_world_base)
 
             # Initialize the message and publish
             pose_msg = PoseStamped()
@@ -182,10 +186,10 @@ class RGBD_Node(Node):
             pose_msg.pose.position.y = float(position[1])
             pose_msg.pose.position.z = float(position[2])
 
-            pose_msg.pose.orientation.x = 0.0
-            pose_msg.pose.orientation.y = 0.0
-            pose_msg.pose.orientation.z = 0.0
-            pose_msg.pose.orientation.w = 1.0
+            pose_msg.pose.orientation.x = float(quat[0])
+            pose_msg.pose.orientation.y = float(quat[1])
+            pose_msg.pose.orientation.z = float(quat[2])
+            pose_msg.pose.orientation.w = float(quat[3])
 
             self.path_msg.header.stamp = pose_msg.header.stamp
             self.path_msg.poses.append(pose_msg)
@@ -202,10 +206,10 @@ class RGBD_Node(Node):
             odom_msg.pose.pose.position.y = float(position[1])
             odom_msg.pose.pose.position.z = float(position[2])
 
-            odom_msg.pose.pose.orientation.x = 0.0
-            odom_msg.pose.pose.orientation.y = 0.0
-            odom_msg.pose.pose.orientation.z = 0.0
-            odom_msg.pose.pose.orientation.w = 1.0
+            odom_msg.pose.pose.orientation.x = float(quat[0])
+            odom_msg.pose.pose.orientation.y = float(quat[1])
+            odom_msg.pose.pose.orientation.z = float(quat[2])
+            odom_msg.pose.pose.orientation.w = float(quat[3])
 
             self.odom_pub.publish(odom_msg)
 

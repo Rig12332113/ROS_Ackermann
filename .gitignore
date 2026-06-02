@@ -3,6 +3,7 @@
 /install/
 /log/
 /bags/
+/gtsam_venv/
 
 # Python cache
 __pycache__/
