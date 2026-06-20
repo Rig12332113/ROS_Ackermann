@@ -4,6 +4,7 @@
 /log/
 /bags/
 /gtsam_venv/
+/tmp/
 
 # Python cache
 __pycache__/
