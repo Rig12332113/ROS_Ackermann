@@ -9,6 +9,7 @@ class Keyframe:
     image: np.ndarray
     depth: np.ndarray
     pose: np.ndarray 
+    optimized_pose: np.ndarray
     keypoints: list = None
     descriptors: np.ndarray = None
 
@@ -101,6 +102,7 @@ class KeyframeManager:
                     image=image.copy(),
                     depth=depth.copy(),
                     pose=pose.copy(),
+                    optimized_pose=pose.copy(),
                     keypoints=keypoints,
                     descriptors=descriptors.copy()
                     ))

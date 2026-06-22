@@ -35,6 +35,10 @@ class RealtimePoseGraph:
         self.keyframe_ids = []
         self.current_estimates = {}
 
+        self.landmark_ids = set()
+
+        self.K = None
+
         self.prior_noise = gtsam.noiseModel.Diagonal.Sigmas(
             np.array([1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4])
         )
@@ -42,6 +46,24 @@ class RealtimePoseGraph:
         self.odom_noise = gtsam.noiseModel.Diagonal.Sigmas(
             np.array([0.05, 0.05, 0.05, 0.10, 0.10, 0.10])
         )
+
+        self.loop_noise = gtsam.noiseModel.Diagonal.Sigmas(
+            np.array([0.08, 0.08, 0.08, 0.15, 0.15, 0.15])
+        )
+
+    def update(self):
+        self.isam.update(self.graph, self.initial)
+        self.result = self.isam.calculateEstimate()
+
+        self.graph.resize(0)
+        self.initial.clear()
+
+        for kid in self.keyframe_ids:
+            key = symbol("x", kid)
+            if self.result.exists(key):
+                self.current_estimates[kid] = pose3_to_np(
+                    self.result.atPose3(key)
+                )
 
     def add_first_keyframe(self, keyframe_id, T_world_keyframe):
         key = symbol("x", keyframe_id)
@@ -57,14 +79,10 @@ class RealtimePoseGraph:
 
         self.initial.insert(key, pose)
 
-        self.isam.update(self.graph, self.initial)
-        self.result = self.isam.calculateEstimate()
-
-        self.graph.resize(0)
-        self.initial.clear()
-
         self.keyframe_ids.append(keyframe_id)
         self.current_estimates[keyframe_id] = T_world_keyframe.copy()
+
+        self.update()
 
     def add_keyframe(self, keyframe_id, prev_keyframe_id, T_prev_curr):
         prev_key = symbol("x", prev_keyframe_id)
@@ -89,48 +107,28 @@ class RealtimePoseGraph:
         T_world_curr_init = T_world_prev @ T_prev_curr
         curr_pose_init = np_to_pose3(T_world_curr_init)
 
-        self.initial.insert(curr_key, curr_pose_init)
+        if not self.result.exists(curr_key) and not self.initial.exists(curr_key):
+            self.initial.insert(curr_key, curr_pose_init)
 
-        self.isam.update(self.graph, self.initial)
-        self.result = self.isam.calculateEstimate()
+        if keyframe_id not in self.keyframe_ids:
+            self.keyframe_ids.append(keyframe_id)
 
-        self.graph.resize(0)
-        self.initial.clear()
-
-        self.keyframe_ids.append(keyframe_id)
-
-        for kid in self.keyframe_ids:
-            k = symbol("x", kid)
-            if self.result.exists(k):
-                self.current_estimates[kid] = pose3_to_np(self.result.atPose3(k))
+        self.update()
 
     def add_loop_factor(self, old_keyframe_id, new_keyframe_id, T_old_new):
         old_key = symbol("x", old_keyframe_id)
         new_key = symbol("x", new_keyframe_id)
-
-        loop_noise = gtsam.noiseModel.Diagonal.Sigmas(
-            np.array([0.40, 0.40, 0.40, 0.50, 0.50, 0.50])
-        )
 
         self.graph.add(
             gtsam.BetweenFactorPose3(
                 old_key,
                 new_key,
                 np_to_pose3(T_old_new),
-                loop_noise,
+                self.loop_noise,
             )
         )
 
-        self.isam.update(self.graph, self.initial)
-        self.result = self.isam.calculateEstimate()
-
-        self.graph.resize(0)
-        self.initial.clear()
-
-        for kid in self.keyframe_ids:
-            k = symbol("x", kid)
-            if self.result.exists(k):
-                self.current_estimates[kid] = pose3_to_np(self.result.atPose3(k))
+        self.update()
 
     def get_optimized_poses(self):
         poses = {}
@@ -142,3 +140,19 @@ class RealtimePoseGraph:
                 poses[kid] = pose3_to_np(self.result.atPose3(key))
 
         return poses
+
+    def get_optimized_landmarks(self):
+        landmarks = {}
+
+        for lid in self.landmark_ids:
+            key = symbol("l", lid)
+
+            if self.result.exists(key):
+                p = self.result.atPoint3(key)
+                landmarks[lid] = np.array([
+                    p[0],
+                    p[1],
+                    p[2],
+                ])
+
+        return landmarks

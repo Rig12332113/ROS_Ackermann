@@ -30,7 +30,6 @@ setup(
     entry_points={
         'console_scripts': [
             'gtsam = realtime_gtsam.realtime_gtsam:main',
-
         ],
     },
 )
