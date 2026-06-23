@@ -30,6 +30,8 @@ setup(
     entry_points={
         'console_scripts': [
             'gtsam = realtime_gtsam.realtime_gtsam:main',
+            'gtsam_pc = realtime_gtsam.realtime_gtsam_with_pointcloud:main',
+            'gtsam_octo = realtime_gtsam.realtime_gtsam_with_octomap:main',
         ],
     },
 )

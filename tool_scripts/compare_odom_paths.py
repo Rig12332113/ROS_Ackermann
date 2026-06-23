@@ -11,7 +11,7 @@ class OdomPathCompare(Node):
     def __init__(self):
         super().__init__("odom_path_compare")
 
-        self.compare_frame = "compare"
+        self.compare_frame = "map"
 
         self.gt_path = Path()
         self.raw_vo_path = Path()

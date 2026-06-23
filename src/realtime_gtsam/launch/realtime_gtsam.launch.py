@@ -18,7 +18,7 @@ def generate_launch_description():
 
     gtsam = Node(
         package="realtime_gtsam",
-        executable="gtsam",
+        executable="gtsam_octo",
         output="screen",
         additional_env={
             "PYTHONPATH": pythonpath,
